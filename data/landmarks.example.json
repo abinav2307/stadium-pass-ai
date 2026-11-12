@@ -1,0 +1,10 @@
+{
+  "notes": "Read in SuperSplat from 'Preferred Splat v1.ply' with Transform 0,0,0 / 0,0,180 / 1. The hoop my wife faced is the east hoop. Court 21.06 x 13.35 m, 12-ft (3.66 m) lane. Left/right = standing at the free-throw line facing that hoop.",
+  "points": [
+    {"label": "rim centre", "court": [8.93, 0.0, 3.05], "splat": [-0.575, 1.045, -1.095]},
+    {"label": "free-throw line, left end", "court": [4.73, 1.83, 0.0], "splat": [-0.47, 0.05, 0.46]},
+    {"label": "free-throw line, right end", "court": [4.73, -1.83, 0.0], "splat": [0.60, 0.05, -0.07]},
+    {"label": "lane meets baseline, left", "court": [10.53, 1.83, 0.0], "splat": [-1.35, 0.07, -1.27]},
+    {"label": "lane meets baseline, right", "court": [10.53, -1.83, 0.0], "splat": [-0.23, 0.10, -1.68]}
+  ]
+}

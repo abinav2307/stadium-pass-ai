@@ -1,0 +1,28 @@
+{
+  "venue": "Park court (demo seating chart)",
+  "units": "meters",
+  "notes": "Court frame: origin at centre court on the floor, +x toward the east hoop, +y toward the north sideline, +z up. Measure your real park court and update length and width. Row rise is kept small so every seat stays inside the height range you captured (about 2.4 m eye height at most).",
+  "court": {
+    "length": 21.06,
+    "width": 13.35,
+    "rim_height": 3.05,
+    "rim_from_baseline": 1.6,
+    "free_throw_from_baseline": 5.8
+  },
+  "rows": {
+    "labels": ["A", "B", "C", "D", "E", "F", "G", "H"],
+    "front_setback": 1.0,
+    "row_depth": 0.9,
+    "base_eye_height": 1.2,
+    "row_rise": 0.16,
+    "max_eye_height": 2.4
+  },
+  "sections": [
+    {"id": "110", "side": "north", "from": -0.5, "to": 0.0, "label": "North sideline, west half"},
+    {"id": "111", "side": "north", "from": 0.0, "to": 0.5, "label": "North sideline, east half"},
+    {"id": "112", "side": "east", "from": -0.5, "to": 0.5, "label": "East baseline, behind the east hoop"},
+    {"id": "113", "side": "south", "from": 0.0, "to": 0.5, "label": "South sideline, east half"},
+    {"id": "114", "side": "south", "from": -0.5, "to": 0.0, "label": "South sideline, west half"},
+    {"id": "115", "side": "west", "from": -0.5, "to": 0.5, "label": "West baseline, behind the west hoop"}
+  ]
+}
