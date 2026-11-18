@@ -142,3 +142,25 @@ def test_write_colmap_files(tmp_path):
     assert len(lines) == 2
     assert lines[0].split()[-1] == "sec112_rowF_a"
     assert (tmp_path / "cameras.txt").exists()
+
+
+def test_viewer_rotation_flips_into_file_frame():
+    """Undoing SuperSplat's 180-degree display rotation flips x and y but keeps height and fit error."""
+    from stadium_pass.align import undo_viewer_rotation
+    s, R, t = _random_similarity(3)
+    court = np.array(list(court_landmarks(CHART).values()))[:4]
+    splat = (s * (R @ court.T)).T + t
+    sim = fit_similarity(court, splat)
+    flipped = undo_viewer_rotation(sim, 180)
+    p = np.array([1.0, 2.0, 3.0])
+    a, b = sim.apply_point(p), flipped.apply_point(p)
+    assert np.allclose([b[0], b[1], b[2]], [-a[0], -a[1], a[2]])
+    assert flipped.rms_error == sim.rms_error
+    assert undo_viewer_rotation(sim, 0) is sim
+
+
+def test_free_throw_look_at_is_level_and_on_the_line():
+    """Aiming at the free-throw line targets its middle at chest height, not the rim."""
+    p = seat_to_court_pose("111", "A", look_at="east_free_throw", chart=CHART)
+    ft_x = CHART["court"]["length"] / 2 - CHART["court"]["free_throw_from_baseline"]
+    assert p.target == pytest.approx([ft_x, 0.0, 1.2])

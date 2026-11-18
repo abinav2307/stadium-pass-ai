@@ -1,10 +1,9 @@
 {
-  "notes": "Read in SuperSplat from 'Preferred Splat v1.ply' with Transform 0,0,0 / 0,0,180 / 1. The hoop my wife faced is the east hoop. Court 21.06 x 13.35 m, 12-ft (3.66 m) lane. Left/right = standing at the free-throw line facing that hoop.",
+  "notes": "Example only: replace the splat values with the coordinates you read off your scan in SuperSplat. Use 3-5 points that form a triangle, not a straight line. Names must match court landmarks: center_court, east_rim, west_rim, east_free_throw_center, west_free_throw_center, corner_northeast, corner_southeast, corner_northwest, corner_southwest. For a point that isn't on that list (a couch corner in a practice scan), give \"court\": [x, y, z] in meters instead of a name.",
   "points": [
-    {"label": "rim centre", "court": [8.93, 0.0, 3.05], "splat": [-0.575, 1.045, -1.095]},
-    {"label": "free-throw line, left end", "court": [4.73, 1.83, 0.0], "splat": [-0.47, 0.05, 0.46]},
-    {"label": "free-throw line, right end", "court": [4.73, -1.83, 0.0], "splat": [0.60, 0.05, -0.07]},
-    {"label": "lane meets baseline, left", "court": [10.53, 1.83, 0.0], "splat": [-1.35, 0.07, -1.27]},
-    {"label": "lane meets baseline, right", "court": [10.53, -1.83, 0.0], "splat": [-0.23, 0.10, -1.68]}
+    {"name": "east_rim", "splat": [2.41, -1.12, 0.35]},
+    {"name": "east_free_throw_center", "splat": [0.98, 0.47, 0.21]},
+    {"name": "corner_northeast", "splat": [3.10, 0.22, 2.04]},
+    {"name": "center_court", "splat": [-1.85, 0.51, 0.18]}
   ]
 }

@@ -27,7 +27,10 @@ _SIDES = {
     "west": {"outward": np.array([-1.0, 0.0, 0.0]), "along": 1},
 }
 
-LOOK_AT_CHOICES = ("center_court", "east_hoop", "west_hoop", "near_hoop", "far_hoop")
+LOOK_AT_CHOICES = (
+    "center_court", "east_hoop", "west_hoop", "near_hoop", "far_hoop",
+    "east_free_throw", "west_free_throw",
+)
 
 
 @dataclass
@@ -142,6 +145,10 @@ def _row_index(chart: dict, row: str) -> int:
 def _look_at_point(chart: dict, side: str, look_at: str) -> np.ndarray:
     """Work out the point a fan in a given seat is looking at.
 
+    "east_free_throw" and "west_free_throw" aim at the middle of that free-throw
+    line at chest height (1.2 m), where a shooter stands. Unlike the hoops, this
+    keeps the camera level instead of tilting up toward the rim.
+
     "near_hoop" and "far_hoop" depend on where the seat is: for a seat behind
     the east baseline the near hoop is the east one. Sideline seats have no
     near or far hoop, so those fall back to centre court.
@@ -165,6 +172,10 @@ def _look_at_point(chart: dict, side: str, look_at: str) -> np.ndarray:
         return np.array([rim_x, 0.0, c["rim_height"]])
     if look_at == "west_hoop":
         return np.array([-rim_x, 0.0, c["rim_height"]])
+    if look_at in ("east_free_throw", "west_free_throw"):
+        # Middle of that free-throw line at about chest height: where a shooter stands.
+        ft_x = c["length"] / 2 - c["free_throw_from_baseline"]
+        return np.array([ft_x if look_at == "east_free_throw" else -ft_x, 0.0, 1.2])
     if look_at in ("near_hoop", "far_hoop"):
         if side in ("east", "west"):
             near = "east_hoop" if side == "east" else "west_hoop"

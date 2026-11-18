@@ -32,6 +32,7 @@ Rules:
   choose the best matching seat and say in one sentence why you chose it.
 - Row A is courtside; later rows are further back and higher.
 - Choose look_at sensibly: baseline seats usually watch the near hoop; sideline seats watch centre court.
+  If the request mentions the free-throw line or the shooter, use east_free_throw or west_free_throw.
 - Call plan_seat once per requested seat, giving each a short snake_case name (e.g. sec112_rowF).
 - When every seat is planned, call write_camera_files exactly once.
 - Finish with a short summary: each seat, where it is, and the camera folder to import.

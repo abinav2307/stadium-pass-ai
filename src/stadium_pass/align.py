@@ -115,20 +115,59 @@ def fit_similarity(court_pts, splat_pts) -> Similarity:
     return Similarity(scale, R, t, rms)
 
 
+def _rotation_z(deg: float) -> np.ndarray:
+    """Return the 3x3 rotation matrix for a turn of `deg` degrees about the Z axis.
+
+    Args:
+        deg: Angle in degrees, counter-clockwise looking down the +Z axis.
+
+    Returns:
+        A 3x3 rotation matrix.
+    """
+    a = np.radians(deg)
+    c, s = np.cos(a), np.sin(a)
+    return np.array([[c, -s, 0.0], [s, c, 0.0], [0.0, 0.0, 1.0]])
+
+
+def undo_viewer_rotation(sim: Similarity, viewer_rotation_z_deg: float) -> Similarity:
+    """Re-express a fitted transform in the scan file's own coordinates.
+
+    SuperSplat may display a scan with a rotation applied (shown in its Transform
+    panel, e.g. Rotation Z = 180 for many PLY files). Landmarks read in the editor
+    are in that displayed frame, but imported COLMAP cameras are placed in the
+    file's own frame. Undoing the display rotation here makes the two agree.
+
+    Args:
+        sim: Transform fitted from landmarks read in the displayed frame.
+        viewer_rotation_z_deg: The Rotation Z shown in SuperSplat's Transform panel.
+
+    Returns:
+        The same transform, mapping court meters into the file's own coordinates.
+        Its RMS error is unchanged.
+    """
+    if not viewer_rotation_z_deg:
+        return sim
+    undo = _rotation_z(-viewer_rotation_z_deg)
+    return Similarity(sim.scale, undo @ sim.R, undo @ sim.t, sim.rms_error)
+
+
 def load_landmarks(path: str | Path, chart: dict) -> Similarity:
     """Read a landmarks file and fit the court-to-scan transform.
 
     File format (see data/landmarks.example.json):
-        {"points": [{"name": "east_rim", "splat": [x, y, z]}, ...]}
+        {"viewer_rotation_z_deg": 180,
+         "points": [{"name": "east_rim", "splat": [x, y, z]}, ...]}
     "name" must be one of seats.court_landmarks; for any other point give
-    "court": [x, y, z] in meters instead.
+    "court": [x, y, z] in meters instead. "viewer_rotation_z_deg" (optional,
+    default 0) is the Rotation Z shown in SuperSplat's Transform panel when the
+    landmarks were read; see undo_viewer_rotation.
 
     Args:
         path: Path to the landmarks JSON.
         chart: The seating chart, used to look up named court landmarks.
 
     Returns:
-        The fitted Similarity.
+        The fitted Similarity, in the scan file's own coordinates.
 
     Raises:
         ValueError: If a landmark name is unknown and has no explicit "court" position.
@@ -145,4 +184,5 @@ def load_landmarks(path: str | Path, chart: dict) -> Similarity:
         else:
             raise ValueError(f"Landmark '{p.get('name')}' is not a known court point; add 'court': [x, y, z]")
         splat_pts.append(p["splat"])
-    return fit_similarity(court_pts, splat_pts)
+    sim = fit_similarity(court_pts, splat_pts)
+    return undo_viewer_rotation(sim, data.get("viewer_rotation_z_deg", 0))
